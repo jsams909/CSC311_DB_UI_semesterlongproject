@@ -9,17 +9,15 @@ import java.sql.*;
 public class DbConnectivityClass {
     final static String DB_NAME="CSC311_BD_TEMP";
         MyLogger lg= new MyLogger();
-        final static String SQL_SERVER_URL = "jdbc:mysql://server.mariadb.database.azure.com";//update this server name
-        final static String DB_URL = "jdbc:mysql://server.mariadb.database.azure.com/"+DB_NAME;//update this database name
-        final static String USERNAME = "csc311admin@server";// update this username
-        final static String PASSWORD = "FARM";// update this password
+    final static String SQL_SERVER_URL = "jdbc:mysql://csc311samson.mysql.database.azure.com/";
+    final static String DB_URL = SQL_SERVER_URL + DB_NAME;
+        final static String USERNAME = "samson";// update this username
+        final static String PASSWORD = "farm123$";// update this password
 
-
+        //Instantiation of the observable list we are storing data
         private final ObservableList<Person> data = FXCollections.observableArrayList();
 
         // Method to retrieve all data from the database and store it into an observable list to use in the GUI tableview.
-
-
         public ObservableList<Person> getData() {
             connectToDatabase();
             try {
@@ -48,21 +46,21 @@ public class DbConnectivityClass {
             return data;
         }
 
-
+/**Actual method to connect to the database**/
         public boolean connectToDatabase() {
             boolean hasRegistredUsers = false;
 
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
-                //First, connect to MYSQL server and create the database if not created
+                //Connects to MYSQL and creating the database (if not created yet)
                 Connection conn = DriverManager.getConnection(SQL_SERVER_URL, USERNAME, PASSWORD);
                 Statement statement = conn.createStatement();
                 statement.executeUpdate("CREATE DATABASE IF NOT EXISTS "+DB_NAME+"");
                 statement.close();
                 conn.close();
 
-                //Second, connect to the database and create the table "users" if cot created
+                //Creating the table of data
                 conn = DriverManager.getConnection(DB_URL, USERNAME, PASSWORD);
                 statement = conn.createStatement();
                 String sql = "CREATE TABLE IF NOT EXISTS users (" + "id INT( 10 ) NOT NULL PRIMARY KEY AUTO_INCREMENT,"
@@ -73,7 +71,7 @@ public class DbConnectivityClass {
                         + "imageURL VARCHAR(200))";
                 statement.executeUpdate(sql);
 
-                //check if we have users in the table users
+                //Checks if table is empty
                 statement = conn.createStatement();
                 ResultSet resultSet = statement.executeQuery("SELECT COUNT(*) FROM users");
 
@@ -148,7 +146,7 @@ public class DbConnectivityClass {
                 e.printStackTrace();
             }
         }
-
+        /**Putting the user created into the table view**/
         public void insertUser(Person person) {
             connectToDatabase();
             try {
@@ -171,7 +169,7 @@ public class DbConnectivityClass {
                 e.printStackTrace();
             }
         }
-
+        /** Lets you edit an already made user in the tableview**/
         public void editUser(int id, Person p) {
             connectToDatabase();
             try {
@@ -192,7 +190,7 @@ public class DbConnectivityClass {
                 throw new RuntimeException(e);
             }
         }
-
+        /**Delete a user from the table view**/
         public void deleteRecord(Person person) {
             int id = person.getId();
             connectToDatabase();
@@ -209,7 +207,7 @@ public class DbConnectivityClass {
             }
         }
 
-        //Method to retrieve id from database where it is auto-incremented.
+        /** Automatically incrememnts the user id number**/
         public int retrieveId(Person p) {
             connectToDatabase();
             int id;

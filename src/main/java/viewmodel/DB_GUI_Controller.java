@@ -2,6 +2,7 @@ package viewmodel;
 
 import dao.DbConnectivityClass;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +22,7 @@ import javafx.stage.Stage;
 import model.Person;
 import service.MyLogger;
 
-import java.io.File;
+import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
@@ -30,7 +31,24 @@ import java.util.ResourceBundle;
 public class DB_GUI_Controller implements Initializable {
 
     @FXML
-    TextField first_name, last_name, department, major, email, imageURL;
+    private Menu csvMenu;
+
+    @FXML
+    private Label statusLabel;
+
+@FXML
+private Button addBtn;
+    @FXML
+    private Button editBtn;
+
+    @FXML
+    private Button deleteBtn;
+
+    @FXML
+    private ComboBox<String> major;
+
+    @FXML
+    TextField first_name, last_name, department, email, imageURL;
     @FXML
     ImageView img_view;
     @FXML
@@ -46,6 +64,39 @@ public class DB_GUI_Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        ObservableList<String> majorOptions = FXCollections.observableArrayList();
+        for (Major m : Major.values()) {
+            majorOptions.add(m.name());
+        }
+
+        major.setItems(majorOptions);
+        major.getSelectionModel().selectFirst(); // Optionally select the first item by default
+
+
+
+        addBtn.setDisable(true);
+
+        // Listener for add button
+        ChangeListener<String> formListener = (obs, oldVal, newVal) -> validateForm();
+
+        first_name.textProperty().addListener(formListener);
+        last_name.textProperty().addListener(formListener);
+        department.textProperty().addListener(formListener);
+       // major.textProperty().addListener(formListener);
+        email.textProperty().addListener(formListener);
+        imageURL.textProperty().addListener(formListener);
+        editBtn.setDisable(true);
+        deleteBtn.setDisable(true);
+
+        // Listner for edit and delete buttons
+        tv.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            boolean noSelection = (newSelection == null);
+            editBtn.setDisable(noSelection);
+            deleteBtn.setDisable(noSelection);
+        });
+
+
+
         try {
             tv_id.setCellValueFactory(new PropertyValueFactory<>("id"));
             tv_fn.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -63,12 +114,14 @@ public class DB_GUI_Controller implements Initializable {
     protected void addNewRecord() {
 
             Person p = new Person(first_name.getText(), last_name.getText(), department.getText(),
-                    major.getText(), email.getText(), imageURL.getText());
+                    major.getValue(), email.getText(), imageURL.getText());
             cnUtil.insertUser(p);
             cnUtil.retrieveId(p);
             p.setId(cnUtil.retrieveId(p));
             data.add(p);
+        statusLabel.setText("New record added successfully!");
             clearForm();
+
 
     }
 
@@ -77,7 +130,7 @@ public class DB_GUI_Controller implements Initializable {
         first_name.setText("");
         last_name.setText("");
         department.setText("");
-        major.setText("");
+        major.setValue("");
         email.setText("");
         imageURL.setText("");
     }
@@ -119,11 +172,13 @@ public class DB_GUI_Controller implements Initializable {
         Person p = tv.getSelectionModel().getSelectedItem();
         int index = data.indexOf(p);
         Person p2 = new Person(index + 1, first_name.getText(), last_name.getText(), department.getText(),
-                major.getText(), email.getText(),  imageURL.getText());
+                major.getValue(),
+                email.getText(),  imageURL.getText());
         cnUtil.editUser(p.getId(), p2);
         data.remove(p);
         data.add(index, p2);
         tv.getSelectionModel().select(index);
+        statusLabel.setText("Record updated successfully!");
     }
 
     @FXML
@@ -154,7 +209,7 @@ public class DB_GUI_Controller implements Initializable {
         first_name.setText(p.getFirstName());
         last_name.setText(p.getLastName());
         department.setText(p.getDepartment());
-        major.setText(p.getMajor());
+        major.setValue(p.getMajor());
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
     }
@@ -228,5 +283,79 @@ public class DB_GUI_Controller implements Initializable {
             this.major = venue;
         }
     }
+    private void validateForm() {
+        String namePattern = "^[A-Z][a-zA-Z]{1,29}$";
+        String departmentPattern = "^[A-Za-z\\s]{2,15}$";
+        String majorPattern = "^[A-Za-z\\s]{2,15}$";
+        String emailPattern = "[A-Z,a-z]{1}+[A-Z,a-z,0-9]+@farmingdale.edu";
+        String imageURLPattern = "^(http|https)://.*\\.(jpg|jpeg|png|gif)$";
+        boolean valid =
+                !first_name.getText().trim().isEmpty() &&
+                        !last_name.getText().trim().isEmpty() &&
+                        !department.getText().trim().isEmpty() &&
+                        !major.getValue().trim().isEmpty() &&
+
+                        !email.getText().trim().isEmpty() &&
+                        !imageURL.getText().trim().isEmpty();
+
+        addBtn.setDisable(!valid);
+    }
+    @FXML
+    protected void importCSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] dataArray = line.split(",");  // Renamed variable to avoid shadowing
+
+                    // Assuming your CSV has the format: first_name, last_name, department, major, email, imageURL
+                    if (dataArray.length == 6) {
+                        Person p = new Person(dataArray[0], dataArray[1], dataArray[2], dataArray[3], dataArray[4], dataArray[5]);
+                        cnUtil.insertUser(p);
+                        cnUtil.retrieveId(p);
+                        p.setId(cnUtil.retrieveId(p));
+                        data.add(p);  // Now correctly referring to the ObservableList
+                    }
+                }
+                statusLabel.setText("CSV file imported successfully!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                statusLabel.setText("Failed to import CSV file.");
+            }
+        }
+    }
+
+    @FXML
+    protected void exportCSV() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV Files", "*.csv"));
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                // Write header line
+                writer.write("First Name, Last Name, Department, Major, Email, Image URL");
+                writer.newLine();
+
+                // Write data
+                for (Person person : data) {
+                    writer.write(person.getFirstName() + "," + person.getLastName() + "," + person.getDepartment() + ","
+                            + person.getMajor() + "," + person.getEmail() + "," + person.getImageURL());
+                    writer.newLine();
+                }
+                statusLabel.setText("CSV file exported successfully!");
+            } catch (IOException e) {
+                e.printStackTrace();
+                statusLabel.setText("Failed to export CSV file.");
+            }
+        }
+    }
+
+
+
 
 }

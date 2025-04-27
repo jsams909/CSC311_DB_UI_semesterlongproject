@@ -11,7 +11,6 @@ public class Person {
 
     public Person() {
     }
-
     public Person(String firstName, String lastName, String department, String major, String email,  String imageURL) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -20,7 +19,7 @@ public class Person {
         this.email = email;
         this.imageURL = imageURL;
     }
-
+    /**Sets the parameters for a user and makes sure the computer knows what variables it is looking for**/
     public Person(Integer id, String firstName, String lastName, String department, String major, String email,  String imageURL) {
         this.id = id;
         this.firstName = firstName;
@@ -30,7 +29,7 @@ public class Person {
         this.email = email;
         this.imageURL = imageURL;
     }
-
+/** Getters and setters for each variable used by a user**/
     public String getEmail() {
         return email;
     }
@@ -90,7 +89,7 @@ public class Person {
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;
     }
-
+/**Converts each field into a string**/
     @Override
     public String toString() {
         return "Person{" +

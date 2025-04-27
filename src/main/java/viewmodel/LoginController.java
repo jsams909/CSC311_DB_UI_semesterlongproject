@@ -58,7 +58,7 @@ public class LoginController {
             e.printStackTrace();
         }
     }
-
+/**Makes the sign up function create a user with name and password and adds them to the database**/
     public void signUp(ActionEvent actionEvent) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("/view/signUp.fxml"));
