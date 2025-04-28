@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -13,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" style="-fx-border-color: BLACK;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.SignUpController">
+<GridPane alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1100.0" style="-fx-border-color: BLACK; -fx-background-color: #008456;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="viewmodel.SignUpController">
     <columnConstraints>
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="162.0" />
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="460.0" minWidth="10.0" prefWidth="196.0" />
@@ -38,7 +39,7 @@
     <children>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnSpan="6" GridPane.rowIndex="1">
             <children>
-                <Label alignment="CENTER" focusTraversable="false" prefHeight="74.0" prefWidth="1099.0" style="-fx-border-color: BLACK;" text="Sign Up New User Account">
+                <Label alignment="CENTER" focusTraversable="false" prefHeight="143.0" prefWidth="1099.0" style="-fx-border-color: BLACK; -fx-background-color: #006456;" text="Sign Up New User Account">
                     <font>
                         <Font name="System Bold" size="36.0" />
                     </font>
@@ -49,7 +50,10 @@
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Username">
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin></Text>
          </children></VBox>
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <children>
@@ -59,7 +63,10 @@
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Password">
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin></Text>
          </children></VBox>
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="6">
          <children>
@@ -69,7 +76,10 @@
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="7" />
         <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="8">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reconfirm Password" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Reconfirm Password">
+               <VBox.margin>
+                  <Insets right="10.0" />
+               </VBox.margin></Text>
          </children></VBox>
         <VBox alignment="CENTER_LEFT" prefHeight="50.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="8">
          <children>
@@ -77,21 +87,27 @@
          </children></VBox>
         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="9">
             <children>
-                <Button fx:id="newAccountBtn" mnemonicParsing="false" onAction="#createNewAccount" prefHeight="43.0" prefWidth="199.0" style="-fx-background-color: GREY; -fx-border-color: BLACK;" text="Create New Account" textAlignment="CENTER" textFill="WHITE">
+                <Button fx:id="newAccountBtn" mnemonicParsing="false" onAction="#createNewAccount" prefHeight="43.0" prefWidth="199.0" style="-fx-background-color: #006456; -fx-border-color: BLACK;" text="Create New Account" textAlignment="CENTER" textFill="WHITE">
                     <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                     </VBox.margin>
                     <font>
                         <Font name="System Bold" size="15.0" />
                     </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
                 </Button>
-                <Button fx:id="goBackBtn" alignment="CENTER" mnemonicParsing="false" onAction="#goBack" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: Gray; -fx-border-color: BLACK;" text=" Login" textFill="WHITE">
+                <Button fx:id="goBackBtn" alignment="CENTER" mnemonicParsing="false" onAction="#goBack" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #006456; -fx-border-color: BLACK;" text=" Login" textFill="WHITE">
                     <font>
                         <Font name="System Bold" size="14.0" />
                     </font>
                     <VBox.margin>
                         <Insets bottom="5.0" top="5.0" />
                     </VBox.margin>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
                 </Button>
             </children>
         </VBox>

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
@@ -32,12 +34,17 @@
       <RowConstraints maxHeight="277.0" minHeight="10.0" prefHeight="49.000048828125045" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
+      <ImageView fitHeight="462.0" fitWidth="588.0" opacity="0.2" pickOnBounds="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <image>
+            <Image url="@../images/fsclogo.png" />
+         </image>
+      </ImageView>
         <HBox alignment="CENTER" prefHeight="103.0" prefWidth="811.0" GridPane.columnSpan="5">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
             <children>
-                <Label alignment="CENTER" prefHeight="114.0" prefWidth="1362.0" style="-fx-border-color: BLACK;" styleClass="login_title" text="STUDENT REGISTRATION&#10;" textAlignment="CENTER" textFill="#111386" wrapText="true">
+                <Label alignment="CENTER" prefHeight="114.0" prefWidth="1362.0" style="-fx-border-color: BLACK; -fx-background-color: #006456;" styleClass="login_title" text="STUDENT REGISTRATION&#10;" textAlignment="CENTER" textFill="#111386" wrapText="true">
                     <font>
                         <Font name="System Bold" size="51.0" />
                     </font>
@@ -68,12 +75,12 @@
                   <Font name="System Bold" size="18.0" />
               </font>
           </Label>
-          <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#login" prefHeight="40.0" prefWidth="208.0" style="-fx-background-color: Green; -fx-border-color: BLACK;" styleClass="login_button" text="Login" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="5">
+          <Button fx:id="loginBtn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#login" prefHeight="42.0" prefWidth="514.0" style="-fx-background-color: Green; -fx-border-color: BLACK;" styleClass="login_button" text="Login" textAlignment="CENTER" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="5">
               <font>
                   <Font name="System Bold" size="18.0" />
               </font>
           </Button>
-            <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefHeight="40.0" prefWidth="210.0" style="-fx-background-color: RED; -fx-border-color: BLACK;" styleClass="login_button" text="Sign Up" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="6">
+            <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefHeight="40.0" prefWidth="504.0" style="-fx-background-color: RED; -fx-border-color: BLACK;" styleClass="login_button" text="Sign Up" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="6">
                 <font>
                     <Font name="System Bold" size="15.0" />
                 </font>
