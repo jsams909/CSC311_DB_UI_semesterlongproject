@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
@@ -79,11 +80,17 @@
               <font>
                   <Font name="System Bold" size="18.0" />
               </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
           </Button>
             <Button fx:id="signUpButton" mnemonicParsing="false" onAction="#signUp" prefHeight="40.0" prefWidth="504.0" style="-fx-background-color: RED; -fx-border-color: BLACK;" styleClass="login_button" text="Sign Up" textFill="WHITE" GridPane.columnIndex="3" GridPane.rowIndex="6">
                 <font>
                     <Font name="System Bold" size="15.0" />
                 </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
             </Button>
           <TextField id="emailTextField" fx:id="usernameTextField" prefHeight="28.0" prefWidth="400.0" promptText="email_id@domain.edu" style="-fx-border-color: BLACK;" styleClass="login_text_field" GridPane.columnIndex="3" GridPane.rowIndex="2" />
           <PasswordField fx:id="passwordField" style="-fx-border-color: BLACK;" styleClass="login_password_field" GridPane.columnIndex="3" GridPane.rowIndex="3" />
