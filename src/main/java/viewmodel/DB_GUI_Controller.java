@@ -25,8 +25,13 @@ import service.MyLogger;
 import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 public class DB_GUI_Controller implements Initializable {
 
@@ -82,7 +87,7 @@ private Button addBtn;
         first_name.textProperty().addListener(formListener);
         last_name.textProperty().addListener(formListener);
         department.textProperty().addListener(formListener);
-       // major.textProperty().addListener(formListener);
+
         email.textProperty().addListener(formListener);
         imageURL.textProperty().addListener(formListener);
         editBtn.setDisable(true);
@@ -109,7 +114,7 @@ private Button addBtn;
             throw new RuntimeException(e);
         }
     }
-
+/** Creates a new person in the table view**/
     @FXML
     protected void addNewRecord() {
 
@@ -124,7 +129,7 @@ private Button addBtn;
 
 
     }
-
+/**Clears person info you typed in**/
     @FXML
     protected void clearForm() {
         first_name.setText("");
@@ -134,7 +139,7 @@ private Button addBtn;
         email.setText("");
         imageURL.setText("");
     }
-
+/**Returns to the login**/
     @FXML
     protected void logOut(ActionEvent actionEvent) {
         try {
@@ -166,7 +171,7 @@ private Button addBtn;
             e.printStackTrace();
         }
     }
-
+/**Edit a row in tableview**/
     @FXML
     protected void editRecord() {
         Person p = tv.getSelectionModel().getSelectedItem();
@@ -180,7 +185,7 @@ private Button addBtn;
         tv.getSelectionModel().select(index);
         statusLabel.setText("Record updated successfully!");
     }
-
+/** Removes a row/person from tableview**/
     @FXML
     protected void deleteRecord() {
         Person p = tv.getSelectionModel().getSelectedItem();
@@ -189,7 +194,7 @@ private Button addBtn;
         data.remove(index);
         tv.getSelectionModel().select(index);
     }
-
+/**Displays image from the url provided**/
     @FXML
     protected void showImage() {
         File file = (new FileChooser()).showOpenDialog(img_view.getScene().getWindow());
@@ -213,7 +218,7 @@ private Button addBtn;
         email.setText(p.getEmail());
         imageURL.setText(p.getImageURL());
     }
-
+/**Inital light theme**/
     public void lightTheme(ActionEvent actionEvent) {
         try {
             Scene scene = menuBar.getScene();
@@ -228,7 +233,7 @@ private Button addBtn;
             e.printStackTrace();
         }
     }
-
+/**Switches to dark theme**/
     public void darkTheme(ActionEvent actionEvent) {
         try {
             Stage stage = (Stage) menuBar.getScene().getWindow();
@@ -239,7 +244,7 @@ private Button addBtn;
             e.printStackTrace();
         }
     }
-
+/**Displays the saved persons in the tableview**/
     public void showSomeone() {
         Dialog<Results> dialog = new Dialog<>();
         dialog.setTitle("New User");
@@ -269,7 +274,7 @@ private Button addBtn;
         });
     }
 
-    private static enum Major {Business, CSC, CPIS}
+    private static enum Major {Business, CSC, CPIS, English, Psychology, PreMed, Dentistry, EE,Math,Biology,Chemistry}
 
     private static class Results {
 
@@ -283,6 +288,7 @@ private Button addBtn;
             this.major = venue;
         }
     }
+    /**Checks regex code in fields**/
     private void validateForm() {
         String namePattern = "^[A-Z][a-zA-Z]{1,29}$";
         String departmentPattern = "^[A-Za-z\\s]{2,15}$";
@@ -300,6 +306,7 @@ private Button addBtn;
 
         addBtn.setDisable(!valid);
     }
+    /**Adds a CSV row or rows to the table view**/
     @FXML
     protected void importCSV() {
         FileChooser fileChooser = new FileChooser();
@@ -328,7 +335,7 @@ private Button addBtn;
             }
         }
     }
-
+/**Creates a csv of the table view**/
     @FXML
     protected void exportCSV() {
         FileChooser fileChooser = new FileChooser();
@@ -337,11 +344,11 @@ private Button addBtn;
 
         if (file != null) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                // Write header line
+
                 writer.write("First Name, Last Name, Department, Major, Email, Image URL");
                 writer.newLine();
 
-                // Write data
+
                 for (Person person : data) {
                     writer.write(person.getFirstName() + "," + person.getLastName() + "," + person.getDepartment() + ","
                             + person.getMajor() + "," + person.getEmail() + "," + person.getImageURL());
@@ -351,6 +358,49 @@ private Button addBtn;
             } catch (IOException e) {
                 e.printStackTrace();
                 statusLabel.setText("Failed to export CSV file.");
+            }
+        }
+    }
+    /**Method to create pdf of the current tableview**/
+    @FXML
+    protected void generatePDF() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save PDF Report");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF Files", "*.pdf"));
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try {
+                // Counting students by major
+                Map<String, Integer> majorCount = new HashMap<>();
+                for (Person p : data) {
+                    majorCount.put(p.getMajor(), majorCount.getOrDefault(p.getMajor(), 0) + 1);
+                }
+
+                // Creates a PDF
+                Document document = new Document();
+                PdfWriter.getInstance(document, new FileOutputStream(file));
+                document.open();
+
+                document.add(new Paragraph("Student Report by Major", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 20, BaseColor.BLACK)));
+                document.add(new Paragraph("Generated on: " + LocalDate.now()));
+                document.add(new Paragraph(" ")); // Blank line
+
+                PdfPTable table = new PdfPTable(2); // Two columns
+                table.addCell("Major");
+                table.addCell("Number of Students");
+
+                for (Map.Entry<String, Integer> entry : majorCount.entrySet()) {
+                    table.addCell(entry.getKey());
+                    table.addCell(String.valueOf(entry.getValue()));
+                }
+
+                document.add(table);
+                document.close();
+                statusLabel.setText("PDF report generated successfully!");
+            } catch (Exception e) {
+                e.printStackTrace();
+                statusLabel.setText("Failed to generate PDF report.");
             }
         }
     }
